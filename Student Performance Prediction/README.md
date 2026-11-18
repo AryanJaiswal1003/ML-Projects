@@ -22,39 +22,40 @@ Training uses an 80/20 split with `random_state=42`. The split is written to `ar
 ## Project structure
 
 ```
-ML-PROJECT/
-├── app.py
-├── requirements.txt
-├── setup.py
-├── .ebextensions/
-│   └── python.config
-├── artifacts/
-├── logs/
-├── notebook/
-│   ├── data/stud.csv
-│   ├── EDA-Analysis.ipynb
-│   └── Model-Training.ipynb
-├── src/
-│   ├── exception.py
-│   ├── logger.py
-│   ├── utils.py
-│   ├── components/
-│   │   ├── data_ingestion.py
-│   │   ├── data_transformation.py
-│   │   └── model_trainer.py
-│   └── pipeline/
-│       ├── train_pipeline.py
-│       └── predict_pipeline.py
-└── templates/
-    ├── index.html
-    └── home.html
+ml_project/
+└── Student Performance Prediction/
+    ├── application.py
+    ├── requirements.txt
+    ├── setup.py
+    ├── Dockerfile
+    ├── .ebextensions/
+    │   └── python.config
+    ├── artifacts/
+    ├── notebook/
+    │   ├── data/stud.csv
+    │   ├── EDA-Analysis.ipynb
+    │   └── Model-Training.ipynb
+    ├── src/
+    │   ├── exception.py
+    │   ├── logger.py
+    │   ├── utils.py
+    │   ├── components/
+    │   │   ├── data_ingestion.py
+    │   │   ├── data_transformation.py
+    │   │   └── model_trainer.py
+    │   └── pipeline/
+    │       ├── train_pipeline.py
+    │       └── predict_pipeline.py
+    └── templates/
+        ├── index.html
+        └── home.html
 ```
 
 `notebook/EDA-Analysis.ipynb` and `notebook/Model-Training.ipynb` are the exploratory and model-comparison notebooks. The package under `src/` is the training and prediction code used by the application.
 
 ## Training
 
-Run the training entry point from the project root:
+Run the training entry point from the `Student Performance Prediction` folder:
 
 ```powershell
 python src/pipeline/train_pipeline.py
@@ -76,7 +77,7 @@ Logs for each run are written to a timestamped file in `logs/`. Failures are rai
 
 `PredictPipeline` in `src/pipeline/predict_pipeline.py` loads `artifacts/preprocessor.pkl` and `artifacts/model.pkl`. It applies the saved preprocessor to a one-row frame and returns the model's mathematics-score prediction. Both artifact files must exist before the application can predict, so the training command has to be run first.
 
-The Flask application in `app.py` exposes two routes:
+The Flask application in `application.py` exposes two routes:
 
 | Route | Method | Result |
 | --- | --- | --- |
@@ -88,7 +89,7 @@ The form collects gender, ethnicity, parental level of education, lunch, test pr
 
 ## Installation
 
-The package is developed with Python 3.8. Commands below are run from the project root. The training and prediction modules import `src`, so the project is installed in editable mode.
+The package is developed with Python 3.8. Commands below are run from the `Student Performance Prediction` folder. The training and prediction modules import `src`, so the project is installed in editable mode.
 
 ```powershell
 python -m venv venv
@@ -97,22 +98,18 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-`requirements.txt` installs pandas, NumPy, seaborn, Matplotlib, scikit-learn, CatBoost, XGBoost, and dill. The web application also requires Flask, which is imported by `app.py` and is not listed in `requirements.txt`:
-
-```powershell
-pip install flask
-```
+`requirements.txt` installs pandas, NumPy, seaborn, Matplotlib, scikit-learn, CatBoost, XGBoost, dill, and Flask.
 
 ## Run the application
 
-Start the server from the project root after the artifacts have been created:
+Start the server from the `Student Performance Prediction` folder after the artifacts have been created:
 
 ```powershell
-python app.py
+python application.py
 ```
 
 The application listens on `0.0.0.0` at port `5000`. Open `http://127.0.0.1:5000/` for the welcome page and `http://127.0.0.1:5000/predict` for the prediction form.
 
 ## Deployment
 
-`.ebextensions/python.config` sets the Elastic Beanstalk Python WSGI path to `app:app`. That value imports the `app` object from `app.py`. The deployed bundle must include the trained `artifacts/preprocessor.pkl` and `artifacts/model.pkl` files, because prediction loads them at request time.
+`.ebextensions/python.config` sets the Elastic Beanstalk Python WSGI path to `application:application`. That value imports the `application` object from `application.py`. Deploy this folder as the application bundle. The bundle must include the trained `artifacts/preprocessor.pkl` and `artifacts/model.pkl` files, because prediction loads them at request time.
