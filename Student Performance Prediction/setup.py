@@ -1,5 +1,8 @@
+import os
 from setuptools import find_packages, setup  # pyright: ignore[reportMissingModuleSource]
 from typing import List
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 HYPHEN_E_DOT = '-e .'
 
@@ -23,5 +26,5 @@ setup(
     author='Aryan',
     author_email='aryanjaiswal1003@yahoo.com',
     packages=find_packages(),
-    install_requires=get_requirements('requirements.txt')
+    install_requires=get_requirements(os.path.join(ROOT_DIR, 'requirements.txt'))
 )

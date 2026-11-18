@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from src.components.data_transformation import DataTransformation
 from src.components.model_trainer import ModelTrainerConfig, ModelTrainer
+from src.paths import project_path
 
 # Workflow when this file is started directly:
 # 1. Read the student CSV and write artifacts/data.csv, train.csv, and test.csv.
@@ -20,12 +21,12 @@ from src.components.model_trainer import ModelTrainerConfig, ModelTrainer
 
 # Output locations for the three CSV files.
 # dataclass fills these paths in automatically, so this class does not need its own __init__.
-# All three files go in the artifacts folder when you run from the project root.
+# All three files go in this project's artifacts folder.
 @dataclass
 class DataIngestionConfig:
-    train_data_path: str = os.path.join('artifacts', "train.csv")
-    test_data_path: str = os.path.join('artifacts', "test.csv")
-    raw_data_path: str = os.path.join('artifacts', "data.csv")
+    train_data_path: str = project_path('artifacts', "train.csv")
+    test_data_path: str = project_path('artifacts', "test.csv")
+    raw_data_path: str = project_path('artifacts', "data.csv")
 
 
 class DataIngestion:
@@ -49,7 +50,7 @@ class DataIngestion:
             # One row is one student.
             # Columns include gender, race, parental education, lunch, test preparation,
             # and the math, reading, and writing scores.
-            df = pd.read_csv('notebook/data/stud.csv')
+            df = pd.read_csv(project_path('notebook', 'data', 'stud.csv'))
             logging.info('Read the Dataset as DataFrame')
 
             # train.csv, test.csv, and data.csv share the artifacts folder.

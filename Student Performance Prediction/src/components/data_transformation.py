@@ -1,4 +1,3 @@
-import os
 import sys
 from dataclasses import dataclass
 
@@ -12,6 +11,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from src.exception import CustomException
 from src.logger import logging
+from src.paths import project_path
 from src.utils import save_object
 
 
@@ -22,7 +22,7 @@ from src.utils import save_object
 # Path of the saved preprocessor. Prediction loads this file instead of rebuilding the steps.
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join('artifacts', "preprocessor.pkl")
+    preprocessor_obj_file_path = project_path('artifacts', "preprocessor.pkl")
 
 class DataTransformation:
     def __init__(self):

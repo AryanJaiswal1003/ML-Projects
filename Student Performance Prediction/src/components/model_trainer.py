@@ -1,4 +1,3 @@
-import os
 import sys
 from dataclasses import dataclass
 
@@ -16,6 +15,7 @@ from xgboost import XGBRegressor
 
 from src.exception import CustomException
 from src.logger import logging
+from src.paths import project_path
 from src.utils import save_object, evaluate_model
 
 # This is the last step of the direct run started from data_ingestion.py.
@@ -26,7 +26,7 @@ from src.utils import save_object, evaluate_model
 # Where the chosen model is stored. Prediction loads this file later.
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path = os.path.join("artifacts", "model.pkl")
+    trained_model_file_path = project_path("artifacts", "model.pkl")
 
 class ModelTrainer:
     def __init__(self):
